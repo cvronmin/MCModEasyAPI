@@ -1,0 +1,82 @@
+package tk.cvrunmin.mcme.api.client.gui;
+
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
+public abstract class MEGuiScreen extends GuiScreen{
+    /**
+     * Draws a rectangle with a vertical gradient between the specified colors (RGBA format). Args : x1, y1, x2, y2,
+     * topColor, bottomColor
+     * <br>
+     * 绘画一个有垂直漸层的长方形。 参数 : 开始x坐标, 开始y坐标, 结束x坐标, 结束y坐标, 頂层顏色(RGBA), 底层顏色(RGBA)
+     */
+    protected void drawGradientRect(int left, int top, int right, int bottom, 
+    		int sR, int sG, int sB, int sA,
+    		int eR, int eG, int eB, int eA)
+    {
+        float f = sA / 255.0F;
+        float f1 = sR / 255.0F;
+        float f2 = sG / 255.0F;
+        float f3 = sB / 255.0F;
+        float f4 = eA / 255.0F;
+        float f5 = eR / 255.0F;
+        float f6 = eG / 255.0F;
+        float f7 = eB / 255.0F;
+        GlStateManager.disableTexture2D();
+        GlStateManager.enableBlend();
+        GlStateManager.disableAlpha();
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.shadeModel(7425);
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.startDrawingQuads();
+        worldrenderer.setColorRGBA_F(f1, f2, f3, f);
+        worldrenderer.addVertex((double)right, (double)top, (double)this.zLevel);
+        worldrenderer.addVertex((double)left, (double)top, (double)this.zLevel);
+        worldrenderer.setColorRGBA_F(f5, f6, f7, f4);
+        worldrenderer.addVertex((double)left, (double)bottom, (double)this.zLevel);
+        worldrenderer.addVertex((double)right, (double)bottom, (double)this.zLevel);
+        tessellator.draw();
+        GlStateManager.shadeModel(7424);
+        GlStateManager.disableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+    }
+    /**
+     * Renders the specified text to the screen, center-aligned. Args : renderer, string, x, y, color
+     * <br>
+     * 渲染特定的置中字串到介面。参数：渲染器, 字串, x坐标, y坐标, 颜色(RGBA)
+     */
+    public void drawCenteredString(FontRenderer fontRendererIn, String text, int x, int y, int R, int G, int B, int Alpha)
+    {
+    	int color;
+    	int Red = R << 16;
+    	int Blue = B << 8;
+    	int Green = G;
+    	int Alpha1 = Alpha << 24;
+    	color = Alpha1 + Red + Blue + Green;
+        fontRendererIn.drawStringWithShadow(text, (float)(x - fontRendererIn.getStringWidth(text) / 2), (float)y, color);
+    }
+
+    /**
+     * Renders the specified text to the screen. Args : renderer, string, x, y, color
+     *<br>
+     * 渲染特定的字串到介面。参数：渲染器, 字串, x坐标, y坐标, 颜色(RGBA)
+     */
+    public void drawString(FontRenderer fontRendererIn, String text, int x, int y, int R, int G, int B, int Alpha)
+    {
+    	int color;
+    	int Red = R << 16;
+    	int Blue = B << 8;
+    	int Green = G;
+    	int Alpha1 = Alpha << 24;
+    	color = Alpha1 + Red + Blue + Green;
+        fontRendererIn.drawStringWithShadow(text, (float)x, (float)y, color);
+    }
+}
